@@ -73,15 +73,114 @@ of mapping between vertices and their positions in the heap.
 
 namespace assignment1
 {
-	
-	void scheduling_problem(const std::string& inputFile)
+	namespace scheduling_problem
 	{
-		/// SOLUTION TO THIS AND THE NEXT PROBLEM WILL BE POSTED AFTER THE DEADLINE!
-	}
+		typedef std::tuple<int, int> job;	// job is a tuple of (weight, length)
 
-	void prims_algorithm(const std::string& inputFile)
+		/* Compute score for each job in a vector as a function of job weight - job length */
+		std::vector<std::tuple<int, job>> computeScoreDiff(const std::vector<job>& jobs)
+		{
+			std::vector<std::tuple<int, job>> scores;	// we'll assign score for each job
+
+			for (auto job : jobs)
+			{
+				int score = std::get<0>(job) - std::get<1>(job);
+				scores.push_back(std::make_tuple(score, job));
+			}
+
+			return scores;
+		}
+
+		/* Compute score for each job in a vector as a function of job weight / job length */
+		std::vector<std::tuple<double, job>> computeScoreRatio(const std::vector<job>& jobs)
+		{
+			std::vector<std::tuple<double, job>> scores;	// we'll assign score for each job
+
+			for (auto job : jobs)
+			{
+				double score = (double)std::get<0>(job) / std::get<1>(job);	// wj / lj
+				scores.push_back(std::make_tuple(score, job));
+			}
+
+			return scores;
+		}
+
+		long long schedule_by_difference(const std::vector<job>& jobs)
+		{
+			auto scores = computeScoreDiff(jobs);
+			// schedule jobs by decreasing value of scores
+			std::sort(scores.begin(), scores.end(), [](std::tuple<int, job> a, std::tuple<int, job> b)
+			{
+				return a > b;
+			});
+
+			long long weighted_sum = 0;
+			int total_length = 0;
+
+			for (auto sorted_jobs : scores)	// we get the job
+			{
+				auto job = std::get<1>(sorted_jobs);
+				total_length += std::get<1>(job);
+				weighted_sum += std::get<0>(job) * total_length;	// wj*cj
+			}
+
+			return weighted_sum;
+		}
+
+		long long schedule_by_ratio(const std::vector<job>& jobs)
+		{
+			auto scores = computeScoreRatio(jobs);
+			// schedule jobs by decreasing value of scores
+			std::sort(scores.begin(), scores.end(), [](std::tuple<double, job> a, std::tuple<double, job> b)
+			{
+				return a > b;
+			});
+
+			long long weighted_sum = 0;
+			int total_length = 0;
+
+			for (auto sorted_jobs : scores)	// we get the job
+			{
+				auto job = std::get<1>(sorted_jobs);
+				total_length += std::get<1>(job);
+				weighted_sum += std::get<0>(job) * total_length;	// wj*cj
+			}
+
+			return weighted_sum;
+		}
+
+		void run_algorithm(const std::string& inputFile)
+		{
+			std::vector<job> jobs;
+			std::ifstream file(inputFile, std::ios::in);
+
+			if (file.is_open())
+			{
+				int n;
+				int job_weight, job_length;
+
+				file >> n;
+				while (file >> job_weight >> job_length)
+				{
+					std::tuple<int, int> job = std::make_tuple(job_weight, job_length);
+
+					jobs.push_back(job);
+				}
+				file.close();
+
+				// Schedule by difference total weighted sum
+				std::cout << "Schedule by difference total weighted sum: " << schedule_by_difference(jobs) << std::endl;
+				// Schedule by ratio total weighted sum
+				std::cout << "Schedule by ratio total weighted sum: " << schedule_by_ratio(jobs) << std::endl;
+			}
+		}
+	} // namespace
+
+	namespace prims_algorithm
 	{
-		/// AFTER DEADLINE!
-	}
-
+		void run_algorithm(const std::string& inputFile)
+		{
+			/// AFTER DEADLINE!
+		}
+	} // namespace
 } // namespace
