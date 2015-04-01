@@ -7,9 +7,10 @@
 //  Created by Nenad Mancevic on 4/1/15.
 //  Copyright (c) 2015 Nenad Mancevic. All rights reserved.
 //
-//  Problem 1:
+//  Problem 1: Scheduling problem
 //
 /***********************
+1.1 
 In this programming problem and the next you'll code up the greedy algorithms 
 from lecture for minimizing the weighted sum of completion times.. 
 Download the text file here (http://bit.ly/1ajLrBi). 
@@ -28,13 +29,33 @@ decreasing order of the difference (weight - length). Recall from lecture that
 this algorithm is not always optimal. IMPORTANT: if two jobs have equal difference 
 (weight - length), you should schedule the job with higher weight first. 
 Beware: if you break ties in a different way, you are likely to get the wrong answer. 
-You should report the sum of weighted completion times of the resulting schedule 
---- a positive integer --- in the box below.
 
-ADVICE: If you get the wrong answer, try out some small test cases to debug your algorithm (and post your test cases to the discussion forum)!
+You should report the sum of weighted completion times of the resulting schedule.
+
+1.2
+For this problem, use the same data set as in the previous problem. 
+Your task now is to run the greedy algorithm that schedules jobs (optimally) 
+in decreasing order of the ratio (weight/length). In this algorithm, it does not 
+matter how you break ties. You should report the sum of weighted completion times 
+of the resulting schedule.
 ************************/
+
+#include <fstream>
+#include <vector>
+#include <tuple>
+#include <algorithm>
 
 namespace assignment1
 {
+	
+	void scheduling_problem(const std::string& inputFile)
+	{
+		/// SOLUTION TO THIS AND THE NEXT PROBLEM WILL BE POSTED AFTER THE DEADLINE!
+	}
+
+	void prims_algorithm(const std::string& inputFile)
+	{
+
+	}
 
 } // namespace
