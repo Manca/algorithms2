@@ -17,5 +17,5 @@ int main(int argc, const char * argv[])
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem("data/jobs.txt");
 	std::cout << "*** Assignment 1 - Prim's algorithm ***" << std::endl;
-	assignment1::scheduling_problem("data/edges.txt");
+	assignment1::prims_algorithm("data/edges.txt");
 }
