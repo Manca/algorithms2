@@ -70,6 +70,8 @@ of mapping between vertices and their positions in the heap.
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <map>
+#include <assert.h>
 
 namespace assignment1
 {
@@ -178,9 +180,102 @@ namespace assignment1
 
 	namespace prims_algorithm
 	{
+		typedef std::tuple<int, int, int> Edge;	// edge has: source vertex, destination vertex and edge cost
+		typedef std::map<int, std::vector<Edge>> Graph;		// source vertex connected to destination vertex vector (name, edge_cost)
+
+		long long prims_algorithm(Graph& g)
+		{
+			long long result = 0;
+			std::vector<int> X = { 1 };		// vertices spanned by tree T so far (initialize X with first vertex in first edge)
+			std::vector<Edge> T;			// T is initially empty (tree_so_far)
+
+			while (X.size() != g.size())
+			{
+				// let's go over all vertices in X so far and find adjancent min cost nodes
+				Edge min_cost_edge;
+				int min = 9999999;
+				for (int u : X)	// always need to find the cheapest edge from whole set of adjacent vertices to set X
+				{
+					// search min cost edge
+					for (auto edge : g[u])
+					{
+						if (std::find(X.begin(), X.end(), std::get<1>(edge)) == X.end()) // if target vertex is not in X
+						{
+							if (std::get<2>(edge) < min)
+							{
+								min_cost_edge = edge;
+								min = std::get<2>(edge);
+							}
+						}
+					}
+				}
+				// finally add the cheapest node overall (going out from X) and add destination node to X
+				T.push_back(min_cost_edge);
+				X.push_back(std::get<1>(min_cost_edge));	// add destination vertex to X
+			}
+
+			for (auto e : T)
+			{
+				result += std::get<2>(e);
+			}
+
+			return result;
+		}
+
+		void test1()
+		{
+			// test case 1
+			Graph test_g;
+			test_g[1] = std::vector<Edge>
+						{std::make_tuple(1, 2, 5),
+						 std::make_tuple(1, 3, 1),
+						 std::make_tuple(1, 4, 2)
+						};
+			test_g[2] = std::vector<Edge>
+						{std::make_tuple(2, 1, 5),
+						 std::make_tuple(2, 4, 4)
+						};
+			test_g[3] = std::vector<Edge>
+						{std::make_tuple(3, 1, 1),
+						 std::make_tuple(3, 4, 3)
+						};	
+			test_g[4] = std::vector<Edge>
+						{std::make_tuple(4, 1, 2),
+						 std::make_tuple(4, 2, 4),
+						 std::make_tuple(4, 3, 3)
+						};
+
+			assert(prims_algorithm(test_g) == 7);
+		}
+
 		void run_algorithm(const std::string& inputFile)
 		{
-			/// AFTER DEADLINE!
+			std::vector<Edge> edges;
+			Graph g;
+
+			std::ifstream file(inputFile, std::ios::in);
+
+			if (file.is_open())
+			{
+				int num_nodes, num_edges;
+				file >> num_nodes >> num_edges;
+
+				int snode, dnode, cost;
+				while (file >> snode >> dnode >> cost)
+				{
+					Edge e = std::make_tuple(snode, dnode, cost);
+					edges.push_back(e);
+
+					g[snode].push_back(std::make_tuple(snode, dnode, cost));
+					g[dnode].push_back(std::make_tuple(dnode, snode, cost));
+
+				}
+				file.close();
+
+				// Compute Prim's Minnimum Spanning Tree
+				long long total_cost = prims_algorithm(g);
+				std::cout << "Total cost of Prim's MST is: " << total_cost << std::endl;
+			}
 		}
 	} // namespace
 } // namespace
