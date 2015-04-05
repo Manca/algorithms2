@@ -171,9 +171,16 @@ namespace assignment1
 				file.close();
 
 				// Schedule by difference total weighted sum
-				std::cout << "Schedule by difference total weighted sum: " << schedule_by_difference(jobs) << std::endl;
+				long long schedule_by_diff_sum = schedule_by_difference(jobs);
+				std::cout << "Schedule by difference total weighted sum: " << schedule_by_diff_sum << std::endl;
+
+				assert(schedule_by_diff_sum == 69119377652);
+
 				// Schedule by ratio total weighted sum
-				std::cout << "Schedule by ratio total weighted sum: " << schedule_by_ratio(jobs) << std::endl;
+				long long schedule_by_ratio_sum = schedule_by_ratio(jobs);
+				std::cout << "Schedule by ratio total weighted sum: " << schedule_by_ratio_sum << std::endl;
+
+				assert(schedule_by_ratio_sum == 67311454237);
 			}
 		}
 	} // namespace
@@ -222,7 +229,7 @@ namespace assignment1
 			return result;
 		}
 
-		void test1()
+		bool test1()
 		{
 			// test case 1
 			Graph test_g;
@@ -246,6 +253,8 @@ namespace assignment1
 						};
 
 			assert(prims_algorithm(test_g) == 7);
+
+			return true;
 		}
 
 		void run_algorithm(const std::string& inputFile)
@@ -275,6 +284,8 @@ namespace assignment1
 				// Compute Prim's Minnimum Spanning Tree
 				long long total_cost = prims_algorithm(g);
 				std::cout << "Total cost of Prim's MST is: " << total_cost << std::endl;
+
+				assert(total_cost == -3612829);
 			}
 		}
 	} // namespace
