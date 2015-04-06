@@ -8,4 +8,6 @@ Let's do some coding now...
 ## Problems
 1) Greedy algorithms
    - Scheduling problem
-   - Prim's Minnimum Spanning Tree algorithm
+   - Prim's Minimum Spanning Tree algorithm
+
+2) Greedy algorithms 2
