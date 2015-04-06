@@ -7,3 +7,5 @@ Let's do some coding now...
 
 ## Problems
 1) Greedy algorithms
+   - Scheduling problem
+   - Prim's Minnimum Spanning Tree algorithm
