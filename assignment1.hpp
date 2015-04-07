@@ -40,7 +40,7 @@ matter how you break ties. You should report the sum of weighted completion time
 of the resulting schedule.
 ************************/
 //
-//  Problem 2: Prim's Minnimum Spanning Tree Algorithm
+//  Problem 2: Prim's Minimum Spanning Tree Algorithm
 //
 /***********************
 In this programming problem you'll code up Prim's minimum spanning tree algorithm. 
@@ -72,6 +72,7 @@ of mapping between vertices and their positions in the heap.
 #include <algorithm>
 #include <map>
 #include <assert.h>
+#include <iostream>
 
 namespace assignment1
 {
@@ -281,7 +282,7 @@ namespace assignment1
 				}
 				file.close();
 
-				// Compute Prim's Minnimum Spanning Tree
+				// Compute Prim's Minimum Spanning Tree
 				long long total_cost = prims_algorithm(g);
 				std::cout << "Total cost of Prim's MST is: " << total_cost << std::endl;
 
