@@ -11,5 +11,5 @@ Let's do some coding now...
    - Prim's Minimum Spanning Tree algorithm
 
 2) Greedy algorithms 2
-	- Clustering
-	- Clustering big
+   - Clustering
+   - Clustering big
