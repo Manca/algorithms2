@@ -10,11 +10,12 @@
 #include <iostream>
 
 #include "assignment1.hpp"
+#include "lib\UnionFind.hpp"
 
 int main(int argc, const char * argv[]) 
 {
 	// Assignment 1
-	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
+/*	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
 
 	std::cout << std::endl << "*** Assignment 1 - Prim's algorithm - Test Case 1 ***" << std::endl;
@@ -22,5 +23,8 @@ int main(int argc, const char * argv[])
 		std::cout << "... Test passed!" << std::endl;
 
 	std::cout << "*** Assignment 1 - Prim's algorithm - Main Test Case ***" << std::endl;
-	assignment1::prims_algorithm::run_algorithm("data/edges.txt");
+	assignment1::prims_algorithm::run_algorithm("data/edges.txt");*/
+
+	DataStructures::TestCase1();
+	DataStructures::TestCase2("data/uf_test_cases/tinyUF.txt");
 }
