@@ -62,16 +62,68 @@ So you will have to be a little creative to complete this part of the question.
 For example, is there some way you can identify the smallest distances 
 without explicitly looking at every pair of nodes?
 ************************/
+#include <string>
+#include <fstream>
+#include "lib\UnionFind.hpp"
+#include <tuple>
+#include <algorithm>
+#include <list>
 
 namespace assignment2
 {
 	namespace four_clustering
 	{
+        int four_clustering(const std::string& inputFile)
+        {
+            const int K = 4;    // four clusters
+            typedef std::tuple<int, int, int> Edge;
+            std::vector<Edge> edges;
 
-	}
+            std::fstream file(inputFile, std::ios::in);
+            if (file.is_open())
+            {
+                int n;
+                int x, y, c;
+                file >> n;
+                // we'll use UnionFind for computing 4 clusters
+                DataStructures::UnionFind uf(n);
+                while (file >> x >> y >> c)
+                {
+                    edges.push_back(std::make_tuple(x, y, c));
+                }
+
+                // first step, sort edges in decreasing order of distances (because can't pop from front on std::vector)
+                std::sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b)
+                {
+                    return (std::get<2>(a) > std::get<2>(b));
+                });
+           
+                std::vector<Edge> test1 = {  std::make_tuple(1, 3, 2), std::make_tuple(1, 4, 3), std::make_tuple(1, 2, 1), std::make_tuple(2,4,1) };
+            
+                while (uf.count() > K)
+                {
+                    Edge connect = edges.back();                                  // take the min cost edge
+                    edges.pop_back();                                            // remove it from the set
+                    uf.Union(std::get<0>(connect)-1, std::get<1>(connect)-1);   // and connect the points
+                }
+                file.close();
+                
+                // let's loop through the remaining edges and find the first cluster not connected to one of our 4 clusters
+                Edge remaining = edges.back();
+                while (uf.connected(std::get<0>(remaining)-1, std::get<1>(remaining)-1))
+                {
+                    edges.pop_back();
+                    remaining = edges.back();
+                }
+                return std::get<2>(remaining);  // just get the edge weight, corresponding to max-spacing
+            }
+            return -1;
+        }
+	} // namespace
 
 	namespace clustering_big
 	{
 
 	}
-}
+
+} // namespace assignment2
