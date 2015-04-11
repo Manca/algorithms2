@@ -64,7 +64,7 @@ without explicitly looking at every pair of nodes?
 ************************/
 #include <string>
 #include <fstream>
-#include "lib\UnionFind.hpp"
+#include "lib/UnionFind.hpp"
 #include <tuple>
 #include <algorithm>
 #include <list>
