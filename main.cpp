@@ -29,6 +29,7 @@ int main(int argc, const char * argv[])
     std::cout << std::endl << "*** Assignment 2 - Clustering - Max-Spacing K=4 Clustering ***" << std::endl;
 //	DataStructures::TestCase1();
 //	DataStructures::TestCase2("data/uf_test_cases/tinyUF.txt");
-    int max_spacing = assignment2::four_clustering::four_clustering("data/clustering1.txt");
+    int max_spacing = assignment2::four_clustering::four_clustering("/Users/Manca/Code/algorithms2/data/clustering1.txt");
     std::cout << "Max-Spacing clustering is: " << max_spacing << std::endl;
+    assignment2::clustering_big::run_algorithm("/Users/Manca/Code/algorithms2/data/clustering_big.txt");
 }

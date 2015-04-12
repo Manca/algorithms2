@@ -67,7 +67,9 @@ without explicitly looking at every pair of nodes?
 #include "lib/UnionFind.hpp"
 #include <tuple>
 #include <algorithm>
-#include <list>
+#include <bitset>
+#include <unordered_map>
+#include <chrono>
 
 namespace assignment2
 {
@@ -123,7 +125,114 @@ namespace assignment2
 
 	namespace clustering_big
 	{
-
-	}
+        typedef std::unordered_map<long long, bool> HashMap;
+        
+        std::vector<int> generateHammingDistances(int numBits, int d)
+        {
+            std::vector<int> distances;
+            
+            if (d == 1)
+            {
+                int dist = 1;
+                for (int i=0; i<numBits; i++)
+                {
+                    distances.push_back(dist);
+                    dist = dist << 1;
+                }
+            }
+            if (d == 2)
+            {
+                int dist = 1; // 000...011
+                int mask = 1;
+                for (int i=0; i < numBits; i++)
+                {
+                    for (int j=i+1; j < numBits; j++)
+                    {
+                        dist = mask | ( 1 << j);
+                        distances.push_back(dist);
+                    }
+                    mask = mask << 1;
+                }
+            }
+            
+            
+            
+            return distances;
+            
+        }
+        
+        void run_algorithm(const std::string& inputFile)
+        {
+            std::fstream file(inputFile, std::ios::in);
+            if (file.is_open())
+            {
+                int n, bpn;
+                file >> n >> bpn;
+                
+                std::string node;
+                std::getline(file,node);
+                HashMap mapa;
+                
+                std::cout << "Reading the input takes: ";
+                std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+                int i = 0; // let's read only first 1000 numbers
+                DataStructures::UnionFind uf(16777216);
+                while (std::getline(file, node) && i < 1000)
+                {
+                    node.erase(std::remove_if(node.begin(), node.end(), [](char x){return std::isspace(x);}), end(node));
+                    std::bitset<24> bit_node(node);
+                    mapa[bit_node.to_ullong()] = 0;
+                    i++;
+                }
+                file.close();
+                std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
+                
+                
+                // iterate through the map
+                // generate distances
+                std::vector<int> distances_one = generateHammingDistances(24, 1);
+                std::vector<int> distances_two = generateHammingDistances(24, 2);
+                int num_clusters = 0;
+                int num_edg_cost_one = 0;
+                int num_edg_cost_two = 0;
+                int already_in_cluster = 0;
+                for (auto& el : mapa)
+                {
+                    if (!el.second)
+                    {
+                        el.second = 1;
+                        num_clusters++;
+                        for (auto d : distances_one)
+                        {
+                            int res = el.first ^ d;
+                            auto exists = mapa.find(res);
+                            if (exists != mapa.end())
+                            {
+                                mapa[res] = 1;
+                                num_edg_cost_one++;
+                                uf.Union(exists->first, el.first);
+                            }
+                        }
+                        for (auto d : distances_two)
+                        {
+                            int res = el.first ^ d;
+                            auto exists = mapa.find(res);
+                            if (exists != mapa.end())
+                            {
+                                mapa[res] = 1;
+                                num_edg_cost_two++;
+                                uf.Union(exists->first, el.first);
+                            }
+                        }
+                    }
+                    else
+                        already_in_cluster++;
+                }
+                std::cout << "Num clusters: " << num_clusters << std::endl;
+                
+            }
+        }
+	} // namespace
 
 } // namespace assignment2
