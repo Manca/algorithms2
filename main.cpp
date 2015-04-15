@@ -23,7 +23,7 @@ int main(int argc, const char * argv[])
 		std::cout << "... Test passed!" << std::endl;
 
 	std::cout << "*** Assignment 1 - Prim's algorithm - Main Test Case ***" << std::endl;
-	assignment1::prims_algorithm::run_algorithm("data/edges.txt");
+//	assignment1::prims_algorithm::run_algorithm("data/edges.txt");
 
     // Assignment 2
     std::cout << std::endl << "*** Assignment 2 - UnionFind Test Case 1 ***" << std::endl;
@@ -35,7 +35,7 @@ int main(int argc, const char * argv[])
     std::cout << "Max-Spacing clustering is: " << max_spacing << std::endl;
 
     std::cout << "*** Assignment 2 - Big Clustering - Hamming distance ***" << std::endl;
-    assignment2::clustering_big::run_algorithm("data/clustering_big.txt");
+ //   assignment2::clustering_big::run_algorithm("data/clustering_big.txt");
     std::cout << "*** Assignment 2 - Big Clustering - Hamming distance - Faster Algorithm ***" << std::endl;
     assignment2::clustering_big::run_faster_algorithm("data/clustering_big.txt");
 }
