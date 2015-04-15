@@ -31,5 +31,5 @@ int main(int argc, const char * argv[])
 //	DataStructures::TestCase2("data/uf_test_cases/tinyUF.txt");
     int max_spacing = assignment2::four_clustering::four_clustering("/Users/Manca/Code/algorithms2/data/clustering1.txt");
     std::cout << "Max-Spacing clustering is: " << max_spacing << std::endl;
-    assignment2::clustering_big::run_algorithm("/Users/Manca/Code/algorithms2/data/clustering_big.txt");
+    assignment2::clustering_big::run_algorithm("/Users/Manca/Code/algorithms2/data/clustering_big.txt"); // "/Users/Manca/Code/algorithms2/data/clustering_tc1.txt");//
 }

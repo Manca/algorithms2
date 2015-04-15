@@ -2,7 +2,7 @@
 //
 //  UnionFind.hpp - Auxiliary Union-Find data structure implemented as Union by Rank
 //
-//  Algorithms: Design and Analysis, Part 1
+//  Algorithms: Design and Analysis, Part 2
 //
 //  Created by Nenad Mancevic on 04/09/15.
 //  Copyright (c) 2015 Nenad Mancevic. All rights reserved.
