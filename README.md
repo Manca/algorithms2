@@ -12,4 +12,6 @@ Let's do some coding now...
 
 2) Greedy algorithms 2
    - Clustering
-   - Clustering big
+   - Clustering big - Hamming distance
+   
+3) Dynamic Programming
