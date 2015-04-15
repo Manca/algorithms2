@@ -36,4 +36,6 @@ int main(int argc, const char * argv[])
 
     std::cout << "*** Assignment 2 - Big Clustering - Hamming distance ***" << std::endl;
     assignment2::clustering_big::run_algorithm("data/clustering_big.txt");
+    std::cout << "*** Assignment 2 - Big Clustering - Hamming distance - Faster Algorithm ***" << std::endl;
+    assignment2::clustering_big::run_faster_algorithm("data/clustering_big.txt");
 }

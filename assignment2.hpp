@@ -69,7 +69,8 @@ without explicitly looking at every pair of nodes?
 #include <bitset>
 #include <unordered_map>
 #include <chrono>
-#include <cctype>
+#include <cctype>   // for std::isspace
+#include <cmath>    // for std::pow
 #include "lib/UnionFind.hpp"
 
 namespace assignment2
@@ -126,8 +127,8 @@ namespace assignment2
 
     namespace clustering_big
     {
-        typedef std::unordered_map<int, std::vector<int>> HashMap;
-
+        typedef std::unordered_map<int, bool> HashMap;  // node number, seen flag
+        
         std::vector<int> generateHammingDistances(int numBits, int d)
         {
             std::vector<int> distances;
@@ -173,13 +174,16 @@ namespace assignment2
 
                 std::cout << "Reading the input takes: ";
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-                DataStructures::UnionFind uf(16777216); // total number of elements (2^24)
+                const int MAX_NODES = (int)std::pow(2, bpn);
+                DataStructures::UnionFind uf(MAX_NODES); // total number of elements (2^24)
 
                 while (std::getline(file, node))
                 {
                     node.erase(std::remove_if(node.begin(), node.end(), [](char x) {return std::isspace(x); }), end(node));
                     std::bitset<24> bit_node(node);
-                    mapa[bit_node.to_ulong()] = std::vector<int>();
+                    int nodeNumber = bit_node.to_ulong();
+
+                    mapa[nodeNumber] = false;
                 }
                 file.close();
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -195,37 +199,145 @@ namespace assignment2
                 // iterate through the map and find the neighbors
                 for (auto& el : mapa)
                 {
+                    el.second = true;           // we won't bother to add already seen edge to UnionFind
+
                     for (auto d : distances_one)
                     {
                         int res = el.first ^ d;
                         auto exists = mapa.find(res);
-                        if (exists != mapa.end())
+                        if (exists != mapa.end() && !exists->second) // if it's found but not yet seen!
                         {
-                            // add to graph (there is an edge from current element to the one 1 Hamming distance away)
-                            mapa[el.first].push_back(exists->first);
+                            // add to UF (there is an edge from current element to the one 1 Hamming distance away)
                             num_edg_cost_one++;
+                            uf.Union(exists->first, el.first);
                         }
                     }
                     for (auto d : distances_two)
                     {
                         int res = el.first ^ d;
                         auto exists = mapa.find(res);
-                        if (exists != mapa.end())
+                        if (exists != mapa.end() && !exists->second)
                         {
                             // add node connected to current one 2 Hamming distances away
-                            mapa[el.first].push_back(exists->first);
                             num_edg_cost_two++;
+                            uf.Union(exists->first, el.first);
                         }
-                    }
-
-                    // union them all for current element
-                    for (auto& vem : mapa[el.first])
-                    {
-                        uf.Union(vem, el.first);
                     }
                 }
                 end = std::chrono::steady_clock::now();
-                std::cout << "Number of clusters: " << n - (16777216 - uf.count()) - (n - mapa.size()) << std::endl;
+                // from total number of nodes (all clusters)
+                // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
+                // and duplicated nodes to get number of clusters that are at least 3 Hamming distances away from others
+                int totalNumberClusters = n - (MAX_NODES - uf.count()) - (n - mapa.size());
+                std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one << std::endl;
+                std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two << std::endl;
+                std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
+                std::cout << "Time took for the algorithm: ";
+                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
+                assert(totalNumberClusters == 6118);
+            }
+        }
+
+        // optimized!
+        void run_faster_algorithm(const std::string& inputFile)
+        {
+            std::fstream file(inputFile, std::ios::in);
+            if (file.is_open())
+            {
+                int n, bpn;
+                file >> n >> bpn;
+
+                std::string node;
+                std::getline(file, node);
+
+                // array for storing values (max n numbers)
+                int *vals = new int[n];
+
+                std::cout << "Reading the input takes: ";
+                std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+                const int MAX_NODES = (int)std::pow(2, bpn);
+                DataStructures::UnionFind uf(MAX_NODES);    // total number of elements (2^24)
+                std::vector<bool> mapa(MAX_NODES, false);   // total number of elements bits for quick lookup (whether the particular node exists or not)
+                int k = 0, dups = 0; int j = 0;
+                char ntxt[25];
+
+                while (!file.eof())
+                {
+                    std::getline(file, node);
+                    int i = 0, z = 0;
+                    // remove whitespaces from the line
+                    while (i < 47)
+                    {
+                        if (node.c_str()[i] == ' ' || node.c_str()[i] == '\n')
+                        {
+                            ++i;
+                            continue;
+                        }
+                        else
+                            ntxt[z] = node.c_str()[i];
+
+                        i++; z++;
+                    }
+                    ntxt[24] = '\0';
+                    std::bitset<24> bit_node(ntxt);
+                    int nodeNumber = bit_node.to_ulong();
+                    // if something's already in map, we skip it
+                    if (mapa[nodeNumber])
+                    {
+                        dups++;
+                        continue;
+                    }
+                    mapa[nodeNumber] = true;    // then we set its bit to true (it's added)
+                    vals[k] = nodeNumber;
+                    k++; j++;
+                }
+                file.close();
+                std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
+
+                // generate distances
+                std::vector<int> distances_one = generateHammingDistances(bpn, 1);
+                std::vector<int> distances_two = generateHammingDistances(bpn, 2);
+                int num_edg_cost_one = 0;
+                int num_edg_cost_two = 0;
+
+                start = std::chrono::steady_clock::now();
+                // iterate through all the elements and find its immediate neighbors (distance < 3)
+                for (int i = 0; i < n; i++)
+                {
+                    for (auto d : distances_one)
+                    {
+                        int resNode = vals[i] ^ d;
+                        bool exists = mapa.at(resNode);         // is computed node in a graph?
+                        if (exists)                             // if yes, connect it to our current node (vals[i])
+                        {
+                            // add to UF (there is an edge from current element to the one 1 Hamming distance away)
+                            num_edg_cost_one++;
+                            uf.Union(vals[i], resNode);
+                        }
+                    }
+                    for (auto d : distances_two)
+                    {
+                        int res = vals[i] ^ d;                  // same thing here, only distance = 2
+                        bool exists = mapa.at(res);
+                        if (exists)
+                        {
+                            // add node connected to current one 2 Hamming distances away
+                            num_edg_cost_two++;
+                            uf.Union(vals[i], res);
+                        }
+                    }
+                }
+                end = std::chrono::steady_clock::now();
+                // from total number of nodes (all clusters)
+                // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
+                // and duplicated nodes (+1 because initial node has to be there)
+                // to get number of clusters that are at least 3 Hamming distances away from others
+                int totalNumberClusters = n - (MAX_NODES - uf.count()) - dups + 1;
+                std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one/2 << std::endl;
+                std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two/2 << std::endl;
+                std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
                 std::cout << "Time took for the algorithm: ";
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
             }
