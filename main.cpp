@@ -11,12 +11,11 @@
 
 #include "assignment1.hpp"
 #include "assignment2.hpp"
-//#include "lib\UnionFind.hpp"
 
 int main(int argc, const char * argv[]) 
 {
 	// Assignment 1
-/*	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
+	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
 
 	std::cout << std::endl << "*** Assignment 1 - Prim's algorithm - Test Case 1 ***" << std::endl;
@@ -24,12 +23,17 @@ int main(int argc, const char * argv[])
 		std::cout << "... Test passed!" << std::endl;
 
 	std::cout << "*** Assignment 1 - Prim's algorithm - Main Test Case ***" << std::endl;
-	assignment1::prims_algorithm::run_algorithm("data/edges.txt");*/
+	assignment1::prims_algorithm::run_algorithm("data/edges.txt");
 
-    std::cout << std::endl << "*** Assignment 2 - Clustering - Max-Spacing K=4 Clustering ***" << std::endl;
-//	DataStructures::TestCase1();
-//	DataStructures::TestCase2("data/uf_test_cases/tinyUF.txt");
-    int max_spacing = assignment2::four_clustering::four_clustering("/Users/Manca/Code/algorithms2/data/clustering1.txt");
+    // Assignment 2
+    std::cout << std::endl << "*** Assignment 2 - UnionFind Test Case 1 ***" << std::endl;
+    if (DataStructures::TestCase1())
+        std::cout << "... Test passed!" << std::endl;
+
+    std::cout << "*** Assignment 2 - Clustering - Max-Spacing K=4 Clustering ***" << std::endl;
+    int max_spacing = assignment2::four_clustering::four_clustering("data/clustering1.txt");
     std::cout << "Max-Spacing clustering is: " << max_spacing << std::endl;
-    assignment2::clustering_big::run_algorithm("/Users/Manca/Code/algorithms2/data/clustering_big.txt"); // "/Users/Manca/Code/algorithms2/data/clustering_tc1.txt");//
+
+    std::cout << "*** Assignment 2 - Big Clustering - Hamming distance ***" << std::endl;
+    assignment2::clustering_big::run_algorithm("data/clustering_big.txt");
 }

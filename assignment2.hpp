@@ -64,18 +64,18 @@ without explicitly looking at every pair of nodes?
 ************************/
 #include <string>
 #include <fstream>
-#include "lib/UnionFind.hpp"
 #include <tuple>
 #include <algorithm>
 #include <bitset>
 #include <unordered_map>
 #include <chrono>
-#include <queue>
+#include <cctype>
+#include "lib/UnionFind.hpp"
 
 namespace assignment2
 {
-	namespace four_clustering
-	{
+    namespace four_clustering
+    {
         int four_clustering(const std::string& inputFile)
         {
             const int K = 4;    // four clusters
@@ -100,20 +100,20 @@ namespace assignment2
                 {
                     return (std::get<2>(a) > std::get<2>(b));
                 });
-           
-                std::vector<Edge> test1 = {  std::make_tuple(1, 3, 2), std::make_tuple(1, 4, 3), std::make_tuple(1, 2, 1), std::make_tuple(2,4,1) };
-            
+
+                std::vector<Edge> test1 = { std::make_tuple(1, 3, 2), std::make_tuple(1, 4, 3), std::make_tuple(1, 2, 1), std::make_tuple(2,4,1) };
+
                 while (uf.count() > K)
                 {
                     Edge connect = edges.back();                                  // take the min cost edge
                     edges.pop_back();                                            // remove it from the set
-                    uf.Union(std::get<0>(connect)-1, std::get<1>(connect)-1);   // and connect the points
+                    uf.Union(std::get<0>(connect) - 1, std::get<1>(connect) - 1);   // and connect the points
                 }
                 file.close();
-                
+
                 // let's loop through the remaining edges and find the first cluster not connected to one of our 4 clusters
                 Edge remaining = edges.back();
-                while (uf.connected(std::get<0>(remaining)-1, std::get<1>(remaining)-1))
+                while (uf.connected(std::get<0>(remaining) - 1, std::get<1>(remaining) - 1))
                 {
                     edges.pop_back();
                     remaining = edges.back();
@@ -122,20 +122,20 @@ namespace assignment2
             }
             return -1;
         }
-	} // namespace
+    } // namespace
 
-	namespace clustering_big
-	{
+    namespace clustering_big
+    {
         typedef std::unordered_map<long long, std::vector<int>> HashMap;
-        
+
         std::vector<int> generateHammingDistances(int numBits, int d)
         {
             std::vector<int> distances;
-            
+
             if (d == 1)
             {
                 int dist = 1;
-                for (int i=0; i<numBits; i++)
+                for (int i = 0; i < numBits; i++)
                 {
                     distances.push_back(dist);
                     dist = dist << 1;
@@ -145,23 +145,23 @@ namespace assignment2
             {
                 int dist = 1; // 000...011
                 int mask = 1;
-                for (int i=0; i < numBits; i++)
+                for (int i = 0; i < numBits; i++)
                 {
-                    for (int j=i+1; j < numBits; j++)
+                    for (int j = i + 1; j < numBits; j++)
                     {
-                        dist = mask | ( 1 << j);
+                        dist = mask | (1 << j);
                         distances.push_back(dist);
                     }
                     mask = mask << 1;
                 }
             }
-            
-            
-            
+
+
+
             return distances;
-            
+
         }
-        
+
         void run_algorithm(const std::string& inputFile)
         {
             std::fstream file(inputFile, std::ios::in);
@@ -169,18 +169,18 @@ namespace assignment2
             {
                 int n, bpn;
                 file >> n >> bpn;
-                
+
                 std::string node;
-                std::getline(file,node);
+                std::getline(file, node);
                 HashMap mapa;
-                
+
                 std::cout << "Reading the input takes: ";
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 int i = 0; // let's read only first 1000 numbers
                 DataStructures::UnionFind uf(16777216);
                 while (std::getline(file, node))
                 {
-                    node.erase(std::remove_if(node.begin(), node.end(), [](char x){return std::isspace(x);}), end(node));
+                    node.erase(std::remove_if(node.begin(), node.end(), [](char x) {return std::isspace(x); }), end(node));
                     std::bitset<24> bit_node(node);
                     mapa[bit_node.to_ullong()] = std::vector<int>();
                     i++;
@@ -188,21 +188,21 @@ namespace assignment2
                 file.close();
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
-                
-                
+
+
                 // iterate through the map
                 // generate distances
                 std::vector<int> distances_one = generateHammingDistances(bpn, 1);
                 std::vector<int> distances_two = generateHammingDistances(bpn, 2);
                 int num_edg_cost_one = 0;
                 int num_edg_cost_two = 0;
-                
+
                 start = std::chrono::steady_clock::now();
                 for (auto& el : mapa)
                 {
                     for (auto d : distances_one)
                     {
-                        int res = el.first ^ d;
+                        long long res = el.first ^ d;
                         auto exists = mapa.find(res);
                         if (exists != mapa.end())
                         {
@@ -213,7 +213,7 @@ namespace assignment2
                     }
                     for (auto d : distances_two)
                     {
-                        int res = el.first ^ d;
+                        long long res = el.first ^ d;
                         auto exists = mapa.find(res);
                         if (exists != mapa.end())
                         {
@@ -222,7 +222,7 @@ namespace assignment2
                             num_edg_cost_two++;
                         }
                     }
-                    
+
                     // union them all
                     for (auto& vem : mapa[el.first])
                     {
@@ -230,12 +230,12 @@ namespace assignment2
                     }
                 }
                 end = std::chrono::steady_clock::now();
-                std::cout << "Num clusters: " << n - (16777216 - uf.count()) - (n-mapa.size()) << std::endl;
+                std::cout << "Num clusters: " << n - (16777216 - uf.count()) - (n - mapa.size()) << std::endl;
                 std::cout << "Time took for the algorithm: ";
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
-                
+
             }
         }
-	} // namespace
+    } // namespace
 
 } // namespace assignment2

@@ -9,8 +9,8 @@
 //
 #include <vector>
 #include <iostream>
-#include <assert.h>
 #include <fstream>
+#include <assert.h>
 
 namespace DataStructures
 {
@@ -74,7 +74,7 @@ namespace DataStructures
         int                 _count;
     };
 
-    void TestCase1()
+    bool TestCase1()
     {
         // test on 10 elements starting from 0
         UnionFind uf(10);
@@ -100,6 +100,8 @@ namespace DataStructures
         assert(uf.count() == 5);
         uf.Union(0, 7);
         assert(uf.count() == 5);
+
+        return true;
     }
 
     void TestCase2(const std::string inputFile)
@@ -119,4 +121,4 @@ namespace DataStructures
             file.close();
         }
     }
-}
+} // namespace
