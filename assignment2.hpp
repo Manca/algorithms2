@@ -126,12 +126,12 @@ namespace assignment2
 
     namespace clustering_big
     {
-        typedef std::unordered_map<long long, std::vector<int>> HashMap;
+        typedef std::unordered_map<int, std::vector<int>> HashMap;
 
         std::vector<int> generateHammingDistances(int numBits, int d)
         {
             std::vector<int> distances;
-
+            // we're interested only in 1 and 2 edge weights
             if (d == 1)
             {
                 int dist = 1;
@@ -143,8 +143,8 @@ namespace assignment2
             }
             if (d == 2)
             {
-                int dist = 1; // 000...011
-                int mask = 1;
+                int dist = 1; // 000...001
+                int mask = 1; // 000...001
                 for (int i = 0; i < numBits; i++)
                 {
                     for (int j = i + 1; j < numBits; j++)
@@ -156,10 +156,7 @@ namespace assignment2
                 }
             }
 
-
-
             return distances;
-
         }
 
         void run_algorithm(const std::string& inputFile)
@@ -176,21 +173,18 @@ namespace assignment2
 
                 std::cout << "Reading the input takes: ";
                 std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-                int i = 0; // let's read only first 1000 numbers
-                DataStructures::UnionFind uf(16777216);
+                DataStructures::UnionFind uf(16777216); // total number of elements (2^24)
+
                 while (std::getline(file, node))
                 {
                     node.erase(std::remove_if(node.begin(), node.end(), [](char x) {return std::isspace(x); }), end(node));
                     std::bitset<24> bit_node(node);
-                    mapa[bit_node.to_ullong()] = std::vector<int>();
-                    i++;
+                    mapa[bit_node.to_ulong()] = std::vector<int>();
                 }
                 file.close();
                 std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
 
-
-                // iterate through the map
                 // generate distances
                 std::vector<int> distances_one = generateHammingDistances(bpn, 1);
                 std::vector<int> distances_two = generateHammingDistances(bpn, 2);
@@ -198,11 +192,12 @@ namespace assignment2
                 int num_edg_cost_two = 0;
 
                 start = std::chrono::steady_clock::now();
+                // iterate through the map and find the neighbors
                 for (auto& el : mapa)
                 {
                     for (auto d : distances_one)
                     {
-                        long long res = el.first ^ d;
+                        int res = el.first ^ d;
                         auto exists = mapa.find(res);
                         if (exists != mapa.end())
                         {
@@ -213,7 +208,7 @@ namespace assignment2
                     }
                     for (auto d : distances_two)
                     {
-                        long long res = el.first ^ d;
+                        int res = el.first ^ d;
                         auto exists = mapa.find(res);
                         if (exists != mapa.end())
                         {
@@ -223,17 +218,16 @@ namespace assignment2
                         }
                     }
 
-                    // union them all
+                    // union them all for current element
                     for (auto& vem : mapa[el.first])
                     {
                         uf.Union(vem, el.first);
                     }
                 }
                 end = std::chrono::steady_clock::now();
-                std::cout << "Num clusters: " << n - (16777216 - uf.count()) - (n - mapa.size()) << std::endl;
+                std::cout << "Number of clusters: " << n - (16777216 - uf.count()) - (n - mapa.size()) << std::endl;
                 std::cout << "Time took for the algorithm: ";
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
-
             }
         }
     } // namespace
