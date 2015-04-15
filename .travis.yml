@@ -9,5 +9,6 @@ install:
 - sudo apt-get install build-essential
 - sudo apt-get install -qq g++-4.8
 - export CXX="g++-4.8"
+- chmod +x build.sh
 
 script: "bash -c ./build.sh"
