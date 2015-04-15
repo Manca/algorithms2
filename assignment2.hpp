@@ -258,7 +258,7 @@ namespace assignment2
 
                 const int MAX_NODES = (int)std::pow(2, bpn);
                 DataStructures::UnionFind uf(MAX_NODES);    // total number of elements (2^24)
-                std::vector<bool> mapa(MAX_NODES, false);   // total number of elements bits for quick lookup (whether the particular node exists or not)
+                std::vector<bool>* mapa = new std::vector<bool>(MAX_NODES, false);   // total number of elements bits for quick lookup (whether the particular node exists or not)
                 int k = 0, dups = 0; int j = 0;
                 char ntxt[25];
 
@@ -283,12 +283,12 @@ namespace assignment2
                     std::bitset<24> bit_node(ntxt);
                     int nodeNumber = bit_node.to_ulong();
                     // if something's already in map, we skip it
-                    if (mapa[nodeNumber])
+                    if (mapa->at(nodeNumber))
                     {
                         dups++;
                         continue;
                     }
-                    mapa[nodeNumber] = true;    // then we set its bit to true (it's added)
+                    mapa->at(nodeNumber) = true;    // then we set its bit to true (it's added)
                     vals[k] = nodeNumber;
                     k++; j++;
                 }
@@ -309,7 +309,7 @@ namespace assignment2
                     for (auto d : distances_one)
                     {
                         int resNode = vals[i] ^ d;
-                        bool exists = mapa.at(resNode);         // is computed node in a graph?
+                        bool exists = mapa->at(resNode);         // is computed node in a graph?
                         if (exists)                             // if yes, connect it to our current node (vals[i])
                         {
                             // add to UF (there is an edge from current element to the one 1 Hamming distance away)
@@ -320,7 +320,7 @@ namespace assignment2
                     for (auto d : distances_two)
                     {
                         int resNode = vals[i] ^ d;             // same thing here, only distance = 2
-                        bool exists = mapa.at(resNode);
+                        bool exists = mapa->at(resNode);
                         if (exists)
                         {
                             // add node connected to current one 2 Hamming distances away
@@ -340,6 +340,10 @@ namespace assignment2
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
                 std::cout << "Time took for the algorithm: ";
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
+                assert(totalNumberClusters == 6118);
+
+                delete mapa;
+                delete[] vals;
             }
         }
     } // namespace
