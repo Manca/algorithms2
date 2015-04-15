@@ -319,13 +319,13 @@ namespace assignment2
                     }
                     for (auto d : distances_two)
                     {
-                        int res = vals[i] ^ d;                  // same thing here, only distance = 2
-                        bool exists = mapa.at(res);
+                        int resNode = vals[i] ^ d;             // same thing here, only distance = 2
+                        bool exists = mapa.at(resNode);
                         if (exists)
                         {
                             // add node connected to current one 2 Hamming distances away
                             num_edg_cost_two++;
-                            uf.Union(vals[i], res);
+                            uf.Union(vals[i], resNode);
                         }
                     }
                 }
