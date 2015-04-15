@@ -19,8 +19,11 @@ namespace DataStructures
     public:
         UnionFind(int n)
         {
-            _parent.resize(n);
-            _rank.resize(n);
+           // _parent.resize(n);
+           // _rank.resize(n);
+            _parent = new int[n];
+            _rank = new int[n];
+
             _count = n;
 
             for (int i = 0; i < n; i++)
@@ -28,6 +31,11 @@ namespace DataStructures
                 _parent[i] = i;
                 _rank[i] = 0;
             }
+        }
+        ~UnionFind()
+        {
+            delete[] _parent;
+            delete[] _rank;
         }
 
         int Find(int x)
@@ -69,8 +77,10 @@ namespace DataStructures
             return Find(x) == Find(y);
         }
     private:
-        std::vector<int>    _parent;
-        std::vector<int>    _rank;
+        //std::vector<int>    _parent;
+        //std::vector<int>    _rank;
+        int*                _parent;
+        int*                _rank;
         int                 _count;
     };
 
