@@ -333,9 +333,9 @@ namespace assignment2
                 end = std::chrono::steady_clock::now();
                 // from total number of nodes (all clusters)
                 // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
-                // and duplicated nodes
+                // and duplicated nodes (+1 for the one whose duplicates we found)
                 // to get number of clusters that are at least 3 Hamming distances away from others
-                int totalNumberClusters = n - (MAX_NODES - uf.count()) - dups;
+                int totalNumberClusters = n - (MAX_NODES - uf.count()) - dups + 1;
                 std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one/2 << std::endl;
                 std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two/2 << std::endl;
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
