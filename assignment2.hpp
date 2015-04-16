@@ -258,10 +258,7 @@ namespace assignment2
 
                 const int MAX_NODES = (int)std::pow(2, bpn);
                 DataStructures::UnionFind uf(MAX_NODES);    // total number of elements (2^24)
-                //std::vector<bool>* mapa = new std::vector<bool>(MAX_NODES, false);   // total number of elements bits for quick lookup (whether the particular node exists or not)
-                bool* mapa = new bool[MAX_NODES];
-                for (int i = 0; i < MAX_NODES; i++)
-                    mapa[i] = false;
+                std::vector<bool> mapa(MAX_NODES, false);   // total number of elements bits for quick lookup (whether the particular node exists or not)
 
                 int k = 0, dups = 0; int j = 0;
                 char ntxt[25];
@@ -307,14 +304,14 @@ namespace assignment2
                 int num_edg_cost_two = 0;
 
                 start = std::chrono::steady_clock::now();
-                // iterate through all the elements and find its immediate neighbors (distance < 3)
-                for (int i = 0; i < n; i++)
+                // iterate through all the elements (- duplicates!) and find their immediate neighbors (distance < 3)
+                for (int i = 0; i < n - dups; i++)
                 {
                     for (auto d : distances_one)
                     {
                         int resNode = vals[i] ^ d;
                         bool exists = mapa[resNode];         // is computed node in a graph?
-                        if (exists)                             // if yes, connect it to our current node (vals[i])
+                        if (exists)                          // if yes, connect it to our current node (vals[i])
                         {
                             // add to UF (there is an edge from current element to the one 1 Hamming distance away)
                             num_edg_cost_one++;
@@ -336,9 +333,9 @@ namespace assignment2
                 end = std::chrono::steady_clock::now();
                 // from total number of nodes (all clusters)
                 // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
-                // and duplicated nodes (+1 because initial node has to be there)
+                // and duplicated nodes
                 // to get number of clusters that are at least 3 Hamming distances away from others
-                int totalNumberClusters = n - (MAX_NODES - uf.count()) - dups + 1;
+                int totalNumberClusters = n - (MAX_NODES - uf.count()) - dups;
                 std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one/2 << std::endl;
                 std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two/2 << std::endl;
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
@@ -346,7 +343,6 @@ namespace assignment2
                 std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
                 assert(totalNumberClusters == 6118);
 
-                delete [] mapa;
                 delete[] vals;
             }
         }
