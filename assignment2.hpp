@@ -7,7 +7,7 @@
 //  Created by Nenad Mancevic on 4/7/15.
 //  Copyright (c) 2015 Nenad Mancevic. All rights reserved.
 //
-//  Problem 2: Clustering
+//  Problem 1: Clustering
 //
 /***********************
 In this programming problem and the next you'll code up the clustering 
@@ -30,7 +30,7 @@ this data set, where the target number k of clusters is set to 4. What is the
 maximum spacing of a 4-clustering?
 ************************/
 //
-//  Problem 3: Clustering big
+//  Problem 2: Clustering big
 //
 /***********************
 In this question your task is again to run the clustering algorithm from lecture, 
