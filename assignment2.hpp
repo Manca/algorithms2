@@ -68,10 +68,10 @@ without explicitly looking at every pair of nodes?
 #include <algorithm>
 #include <bitset>
 #include <unordered_map>
-#include <chrono>
 #include <cctype>   // for std::isspace
 #include <cmath>    // for std::pow
 #include "lib/UnionFind.hpp"
+#include "lib/profile.hpp"
 
 namespace assignment2
 {
@@ -86,6 +86,7 @@ namespace assignment2
             std::fstream file(inputFile, std::ios::in);
             if (file.is_open())
             {
+                PROFILE("Four Clustering")
                 int n;
                 int x, y, c;
                 file >> n;
@@ -119,6 +120,8 @@ namespace assignment2
                     edges.pop_back();
                     remaining = edges.back();
                 }
+                PROFILE_STOP();
+
                 return std::get<2>(remaining);  // just get the edge weight, corresponding to max-spacing
             }
             return -1;
@@ -165,6 +168,7 @@ namespace assignment2
             std::fstream file(inputFile, std::ios::in);
             if (file.is_open())
             {
+                PROFILE("Read input Clustering Big (slower algo)")
                 int n, bpn;
                 file >> n >> bpn;
 
@@ -172,8 +176,6 @@ namespace assignment2
                 std::getline(file, node);
                 HashMap mapa;
 
-                std::cout << "Reading the input takes: ";
-                std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
                 const int MAX_NODES = (int)std::pow(2, bpn);
                 DataStructures::UnionFind uf(MAX_NODES); // total number of elements (2^24)
 
@@ -186,8 +188,7 @@ namespace assignment2
                     mapa[nodeNumber] = false;
                 }
                 file.close();
-                std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
+                PROFILE_STOP();
 
                 // generate distances
                 std::vector<int> distances_one = generateHammingDistances(bpn, 1);
@@ -195,7 +196,7 @@ namespace assignment2
                 int num_edg_cost_one = 0;
                 int num_edg_cost_two = 0;
 
-                start = std::chrono::steady_clock::now();
+                PROFILE("Clustering big (slower algo)")
                 // iterate through the map and find the neighbors
                 for (auto& el : mapa)
                 {
@@ -224,7 +225,7 @@ namespace assignment2
                         }
                     }
                 }
-                end = std::chrono::steady_clock::now();
+                PROFILE_STOP();
                 // from total number of nodes (all clusters)
                 // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
                 // and duplicated nodes to get number of clusters that are at least 3 Hamming distances away from others
@@ -232,8 +233,6 @@ namespace assignment2
                 std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one << std::endl;
                 std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two << std::endl;
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
-                std::cout << "Time took for the algorithm: ";
-                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
                 assert(totalNumberClusters == 6118);
             }
         }
@@ -244,6 +243,7 @@ namespace assignment2
             std::fstream file(inputFile, std::ios::in);
             if (file.is_open())
             {
+                PROFILE("Read input Clustering Big (faster algo)")
                 int n, bpn;
                 file >> n >> bpn;
 
@@ -252,9 +252,6 @@ namespace assignment2
 
                 // array for storing values (max n numbers)
                 int *vals = new int[n];
-
-                std::cout << "Reading the input takes: ";
-                std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
                 const int MAX_NODES = (int)std::pow(2, bpn);
                 DataStructures::UnionFind uf(MAX_NODES);    // total number of elements (2^24)
@@ -294,16 +291,15 @@ namespace assignment2
                     k++; j++;
                 }
                 file.close();
-                std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
-
+                PROFILE_STOP();
+                
                 // generate distances
                 std::vector<int> distances_one = generateHammingDistances(bpn, 1);
                 std::vector<int> distances_two = generateHammingDistances(bpn, 2);
                 int num_edg_cost_one = 0;
                 int num_edg_cost_two = 0;
 
-                start = std::chrono::steady_clock::now();
+                PROFILE("Clustering big (faster algo)");
                 // iterate through all the elements (- duplicates!) and find their immediate neighbors (distance < 3)
                 for (int i = 0; i < n - dups; i++)
                 {
@@ -330,7 +326,7 @@ namespace assignment2
                         }
                     }
                 }
-                end = std::chrono::steady_clock::now();
+                PROFILE_STOP();
                 // from total number of nodes (all clusters)
                 // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
                 // and duplicated nodes (+1 for the one whose duplicates we found)
@@ -339,8 +335,6 @@ namespace assignment2
                 std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one/2 << std::endl;
                 std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two/2 << std::endl;
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;
-                std::cout << "Time took for the algorithm: ";
-                std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms.\n" << std::endl;
                 assert(totalNumberClusters == 6118);
 
                 delete[] vals;
