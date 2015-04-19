@@ -7,10 +7,14 @@
 //
 // Main program - all our assignments will be executed from here
 
+#define PROFILE(name) tools::Profile::getInstance()->start(name);
+#define PROFILE_STOP() tools::Profile::getInstance()->stop();
+
 #include <iostream>
 
 #include "assignment1.hpp"
 #include "assignment2.hpp"
+#include "assignment3.hpp"
 
 int main(int argc, const char * argv[]) 
 {
@@ -38,4 +42,15 @@ int main(int argc, const char * argv[])
     assignment2::clustering_big::run_algorithm("data/clustering_big.txt");
     std::cout << "*** Assignment 2 - Big Clustering - Hamming distance - Faster Algorithm ***" << std::endl;
     assignment2::clustering_big::run_faster_algorithm("data/clustering_big.txt");
+
+    //std::vector<std::vector<double>> a =assignment3::binaryTree();
+  /*  std::cout << std::endl << "*** Assignment 3 - Knapsack - Test Case 1 ***" << std::endl;
+    if (assignment3::knapsack_1::testCase1())
+        std::cout << "... Test passed!" << std::endl;
+    std::cout << "*** Assignment 3 - Knapsack - Problem 1 ***" << std::endl;
+    assignment3::knapsack_1::run_algorithm("data/knapsack1.txt");
+    std::cout << "*** Assignment 3 - Knapsack - Problem 2 ***" << std::endl;
+    assignment3::knapsack_big::run_algorithm("data/knapsack_big.txt");
+
+ */
 }
