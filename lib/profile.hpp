@@ -36,7 +36,7 @@ namespace tools
             _end = std::chrono::steady_clock::now();
             _duration = std::chrono::duration_cast<std::chrono::milliseconds>(_end - _start).count();
 
-            std::cout << _profileName << " took " << _duration << "ms" << " to run." << std::endl;
+            std::cout << "[PROFILE] " << _profileName << " took " << _duration << "ms" << " to run." << std::endl;
         }
 
         long long elapsed()
