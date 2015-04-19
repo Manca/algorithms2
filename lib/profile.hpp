@@ -10,8 +10,6 @@
 #include <chrono>
 #include <iostream>
 
-#include <Windows.h>
-
 namespace tools
 {
     class Profile
@@ -59,7 +57,7 @@ namespace tools
         }
     };
     Profile* Profile::_instance = nullptr;
-
+    /*
     void testProfile()
     {
         Profile::getInstance()->start("Sleep 430");
@@ -73,5 +71,5 @@ namespace tools
         Sleep(3000);
         assert(Profile::getInstance()->elapsed() == 1000);
     }
-
+    */
 } // namespace
