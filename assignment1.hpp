@@ -73,6 +73,7 @@ of mapping between vertices and their positions in the heap.
 #include <map>
 #include <assert.h>
 #include <iostream>
+#include "lib/profile.hpp"
 
 namespace assignment1
 {
@@ -267,6 +268,7 @@ namespace assignment1
 
 			if (file.is_open())
 			{
+                PROFILE("Read file for Prim's algo");
 				int num_nodes, num_edges;
 				file >> num_nodes >> num_edges;
 
@@ -281,9 +283,12 @@ namespace assignment1
 
 				}
 				file.close();
+                PROFILE_STOP();
 
 				// Compute Prim's Minimum Spanning Tree
+                PROFILE("Prims algorithm");
 				long long total_cost = prims_algorithm(g);
+                PROFILE_STOP();
 				std::cout << "Total cost of Prim's MST is: " << total_cost << std::endl;
 
 				assert(total_cost == -3612829);
