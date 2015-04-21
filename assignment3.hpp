@@ -50,6 +50,7 @@ In the box below, type in the value of the optimal solution.
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>    // std::max, std::min
 #include "lib/profile.hpp"
 
 namespace assignment3
@@ -91,7 +92,7 @@ namespace assignment3
                     if (weights[i-1] > x)
                         A[x][i] = A[x][i - 1];
                     else
-                        A[x][i] = __max(A[x][i - 1], A[x - weights[i-1]][i - 1] + values[i-1]);
+                        A[x][i] = std::max(A[x][i - 1], A[x - weights[i-1]][i - 1] + values[i-1]);
                 }
             }
 
@@ -148,8 +149,8 @@ namespace assignment3
                 withLastItem = values[n - 1] + knapsack_rec(n - 1, values, weights, W - weights[n - 1]);
             }
             withoutLastItem = knapsack_rec(n - 1, values, weights, W);
-            saved[W].push_back(std::make_tuple(n, __max(withLastItem, withoutLastItem)));
-            return __max(withLastItem, withoutLastItem);
+            saved[W].push_back(std::make_tuple(n, std::max(withLastItem, withoutLastItem)));
+            return std::max(withLastItem, withoutLastItem);
 
             //n = values.size();
 
@@ -217,7 +218,7 @@ namespace assignment3
                         else
                             resRight = A[r + 1][i + s];
 
-                        currMin = __min(currMin, w[k] + resLeft + resRight);
+                        currMin = std::min(currMin, w[k] + resLeft + resRight);
                     }
                     A[i][i + s] = currMin;
                 }
