@@ -18,3 +18,7 @@ Let's do some coding now...
    - Clustering big - Hamming distance
    
 3) Dynamic Programming
+   - Knapsack
+   - Knapsack big - Memoization
+
+4) Dynamic Programming 2
