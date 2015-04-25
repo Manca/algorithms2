@@ -7,11 +7,7 @@
 //
 // Main program - all our assignments will be executed from here
 
-#define PROFILE(name) tools::Profile::getInstance()->start(name);
-#define PROFILE_STOP() tools::Profile::getInstance()->stop();
-
 #include <iostream>
-
 #include "assignment1.hpp"
 #include "assignment2.hpp"
 #include "assignment3.hpp"

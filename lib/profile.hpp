@@ -7,6 +7,9 @@
 //  Created by Nenad Mancevic on 04/19/15.
 //  Copyright (c) 2015 Nenad Mancevic. All rights reserved.
 //
+#define PROFILE(name) tools::Profile::getInstance()->start(name);
+#define PROFILE_STOP() tools::Profile::getInstance()->stop();
+
 #include <chrono>
 #include <iostream>
 #include <string>
