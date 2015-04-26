@@ -20,6 +20,7 @@ Let's do some coding now...
 3) Dynamic Programming
    - Knapsack
    - Knapsack big:
+
      1) Recursive with memoization (hash table)
 	 2) Iterative with two C-like arrays
 
