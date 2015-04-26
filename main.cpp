@@ -11,10 +11,11 @@
 #include "assignment1.hpp"
 #include "assignment2.hpp"
 #include "assignment3.hpp"
+#include "assignment4.hpp"
 
 int main(int argc, const char * argv[]) 
 {
-	// Assignment 1
+    ///////////////////// Assignment 1 //////////////////////////
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
 
@@ -25,7 +26,7 @@ int main(int argc, const char * argv[])
 	std::cout << "*** Assignment 1 - Prim's algorithm - Main Test Case ***" << std::endl;
 	assignment1::prims_algorithm::run_algorithm("data/edges.txt");
 
-    // Assignment 2
+    ///////////////////// Assignment 2 //////////////////////////
     std::cout << std::endl << "*** Assignment 2 - UnionFind Test Case 1 ***" << std::endl;
     if (DataStructures::TestCase1())
         std::cout << "... Test passed!" << std::endl;
@@ -39,12 +40,22 @@ int main(int argc, const char * argv[])
     std::cout << "*** Assignment 2 - Big Clustering - Hamming distance - Faster Algorithm ***" << std::endl;
     assignment2::clustering_big::run_faster_algorithm("data/clustering_big.txt");
 
-    //std::vector<std::vector<double>> a =assignment3::binaryTree();
+    ///////////////////// Assignment 3 //////////////////////////
     std::cout << std::endl << "*** Assignment 3 - Knapsack - Test Case 1 ***" << std::endl;
     if (assignment3::knapsack_1::testCase1())
         std::cout << "... Test passed!" << std::endl;
     std::cout << "*** Assignment 3 - Knapsack - Problem 1 ***" << std::endl;
     assignment3::knapsack_1::run_algorithm("data/knapsack1.txt");
+
+    std::cout << "*** Assignment 3 - Knapsack - Problem 2 - Test Case 1 ***" << std::endl;
+    if (assignment3::knapsack_big::testCase1())
+        std::cout << "... Test passed!" << std::endl;
     std::cout << "*** Assignment 3 - Knapsack - Problem 2 ***" << std::endl;
     assignment3::knapsack_big::run_algorithm("data/knapsack_big.txt");
+
+    ///////////////////// Assignment 4 //////////////////////////
+    std::cout << std::endl << "*** Assignment 4 - All-Pairs Shortest Path ***" << std::endl;
+    assignment4::run_algorithm("data/g1.txt");
+    assignment4::run_algorithm("data/g2.txt");
+    assignment4::run_algorithm("data/g3.txt");
 }
