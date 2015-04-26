@@ -155,14 +155,48 @@ namespace assignment3
 
         int knapsack_smallArray(std::vector<int>& values, std::vector<int>& weights, const int W)
         {
+            // optimized version! (two arrays with at most W+1 elements)
+            int *A = new int[W + 1];    // row 1 (current element being processed)
+            int *B = new int[W + 1];    // row 0 (previous)
+            for (int i = 0; i <= W; i++)
+            {
+                A[i] = 0;
+                B[i] = 0;
+            }
+
+            for (size_t i = 1; i <= values.size(); i++)
+            {
+                for (int x = 1; x <= W; x++)
+                {
+                    if (weights[i - 1] > x)
+                    {
+                        A[x] = B[x];
+                    }
+                    else
+                    {
+                        A[x] = __max(B[x], B[x - weights[i - 1]] + values[i - 1]);
+                    }
+                }
+
+                // interchange only after row is filled (only swap pointers!)
+                int* tmp = A;
+                A = B;
+                B = tmp;
+            }
+
+            int res = B[W]; // since the last swap, our final row is in B now
+            delete[] A;
+            delete[] B;
+            return res;
+
+        /**** Version that works too. Only a bit slower.
             //// define and initialize resulting matrix (rows are integral weights up to W (inclusive), so 0,1,2,3...,W, columns are items up to n (inclusive))
-            std::vector<std::vector<int>> A;    // 2D-array 2x(n+1)
+            /* std::vector<std::vector<int>> A;    // 2D-array 2x(n+1)
             A.resize(2);
             for (int i = 0; i < 2; i++)
             {
                 A[i].resize(W + 1);
             }
-
             for (size_t i = 1; i <= values.size(); i++)
             {
                 for (int x = 1; x <= W; x++)
@@ -184,6 +218,7 @@ namespace assignment3
             }
 
             return A[1][W]; // bottom right cell contains optimal value
+            *****/
         }
 
         bool testCase1()
@@ -191,7 +226,7 @@ namespace assignment3
             std::vector<int> test_v = { 3,2,4,4 };
             std::vector<int> test_wt = { 4,3,2,3 };
             int test_W = 6;
-            int optimal_value = knapsack_rec_memoization(4, test_v, test_wt, test_W);
+            int optimal_value = knapsack_smallArray(test_v, test_wt, test_W); //knapsack_rec_memoization(4, test_v, test_wt, test_W);
 
             assert(optimal_value == 8);
             return true;
@@ -208,16 +243,22 @@ namespace assignment3
             PROFILE("Knapsack Recursive Memoization");
             int optimal_value = knapsack_rec_memoization(values.size(), values, weights, W);
             PROFILE_STOP();
+            long long elapsedRM = tools::Profile::getInstance()->elapsed();
 
             assert(optimal_value == 4243395);
 
             PROFILE("Knapsack Original Smaller Array");
             optimal_value = knapsack_smallArray(values, weights, W);
             PROFILE_STOP();
+            long long elapsedIter = tools::Profile::getInstance()->elapsed();
 
             assert(optimal_value == 4243395);
 
             std::cout << "Optimal value for big knapsack problem is: " << optimal_value << std::endl;
+            if (elapsedIter < elapsedRM)
+                std::cout << "Iterative algorithm outperforms recursive with memoization by: " << elapsedRM - elapsedIter << "ms" << std::endl;
+            else
+                std::cout << "Recursive algorithm with memoization outperforms iterative by: " << elapsedIter - elapsedRM << "ms" << std::endl;
         }
     } // namespace
 
