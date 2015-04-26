@@ -21,8 +21,9 @@ Let's do some coding now...
    - Knapsack
    - Knapsack big:
 
-     1) Recursive with memoization (hash table)
-	 2) Iterative with two C-like arrays
+     a) Recursive with memoization (hash table)
+
+	 b) Iterative with two C-like arrays
 
 4) Dynamic Programming 2
    - Floyd-Warshall All-Pairs Shortest Path Algorithm
