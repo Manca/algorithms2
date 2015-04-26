@@ -156,8 +156,10 @@ namespace assignment4
         int n = load_graph(fileName);
         int shortest_shortest_path = INT32_MAX;
         if (floyd_warshall(assignment4::g, n, shortest_shortest_path))
+        {
             std::cout << "Shortest of all shortest paths is: " << shortest_shortest_path << std::endl;
-        assert(shortest_shortest_path == -19);
+            assert(shortest_shortest_path == -19);
+        }
     }
 
 } // namespace
