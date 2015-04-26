@@ -1,5 +1,5 @@
 //
-//  assignment1.cpp
+//  assignment1.hpp
 //  Algorithms: Design and Analysis, Part 2
 //
 //  Programming Assignment 1

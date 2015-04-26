@@ -1,6 +1,6 @@
 #pragma once
 //
-//  assignment3.cpp
+//  assignment3.hpp
 //  Algorithms: Design and Analysis, Part 2
 //
 //  Programming Assignment 3
