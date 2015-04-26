@@ -174,7 +174,7 @@ namespace assignment3
                     }
                     else
                     {
-                        A[x] = __max(B[x], B[x - weights[i - 1]] + values[i - 1]);
+                        A[x] = std::max(B[x], B[x - weights[i - 1]] + values[i - 1]);
                     }
                 }
 
@@ -207,7 +207,7 @@ namespace assignment3
                     }
                     else
                     {
-                        A[1][x] = __max(A[0][x], A[0][x - weights[i - 1]] + values[i - 1]);
+                        A[1][x] = std::max(A[0][x], A[0][x - weights[i - 1]] + values[i - 1]);
                     }
                 }
                 // interchange only after row is filled
