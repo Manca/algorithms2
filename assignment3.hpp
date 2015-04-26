@@ -127,7 +127,7 @@ namespace assignment3
     {
         static std::unordered_map<int, std::vector<std::tuple<int,int>>> saved;  // key is W and value is item,value
 
-        int knapsack_rec(int n, std::vector<int>& values, std::vector<int>& weights, const int W)
+        int knapsack_rec_memoization(int n, std::vector<int>& values, std::vector<int>& weights, const int W)
         {
             if (saved.count(W) > 0)
             {
@@ -146,30 +146,57 @@ namespace assignment3
                 withLastItem = -1;
             else
             {
-                withLastItem = values[n - 1] + knapsack_rec(n - 1, values, weights, W - weights[n - 1]);
+                withLastItem = values[n - 1] + knapsack_rec_memoization(n - 1, values, weights, W - weights[n - 1]);
             }
-            withoutLastItem = knapsack_rec(n - 1, values, weights, W);
+            withoutLastItem = knapsack_rec_memoization(n - 1, values, weights, W);
             saved[W].push_back(std::make_tuple(n, std::max(withLastItem, withoutLastItem)));
             return std::max(withLastItem, withoutLastItem);
-
-            //n = values.size();
-
-            //// define and initialize resulting matrix (rows are integral weights up to W (inclusive), so 0,1,2,3...,W, columns are items up to n (inclusive))
-            //std::vector<std::vector<int>> A(2, std::vector<int>(n + 1));
-
-            //for (size_t i = 1; i <= values.size(); i++)
-            //{
-            //    for (int x = 0; x <= W; x++)
-            //    {
-            //        if (weights[i - 1] > x)
-            //            A[x][i] = A[x][i - 1];
-            //        else
-            //            A[x][i] = __max(A[x][i - 1], A[x - weights[i - 1]][i - 1] + values[i - 1]);
-            //    }
-            //}
-
-            //return A[W][n]; // bottom right cell contains optimal value
         }
+
+        int knapsack_smallArray(std::vector<int>& values, std::vector<int>& weights, const int W)
+        {
+            //// define and initialize resulting matrix (rows are integral weights up to W (inclusive), so 0,1,2,3...,W, columns are items up to n (inclusive))
+            std::vector<std::vector<int>> A;    // 2D-array 2x(n+1)
+            A.resize(2);
+            for (int i = 0; i < 2; i++)
+            {
+                A[i].resize(W + 1);
+            }
+
+            for (size_t i = 1; i <= values.size(); i++)
+            {
+                for (int x = 1; x <= W; x++)
+                {
+                    if (weights[i - 1] > x)
+                    {
+                        A[1][x] = A[0][x];
+                    }
+                    else
+                    {
+                        A[1][x] = __max(A[0][x], A[0][x - weights[i - 1]] + values[i - 1]);
+                    }
+                }
+                // interchange only after row is filled
+                for (int x = 1; x <= W; x++)
+                {
+                    A[0][x] = A[1][x];  // interchange
+                }
+            }
+
+            return A[1][W]; // bottom right cell contains optimal value
+        }
+
+        bool testCase1()
+        {
+            std::vector<int> test_v = { 3,2,4,4 };
+            std::vector<int> test_wt = { 4,3,2,3 };
+            int test_W = 6;
+            int optimal_value = knapsack_rec_memoization(4, test_v, test_wt, test_W);
+
+            assert(optimal_value == 8);
+            return true;
+        }
+
         void run_algorithm(const std::string& fileName)
         {
             std::vector<int> values;
@@ -178,14 +205,17 @@ namespace assignment3
 
             read_file(fileName, values, weights, W);
 
-            std::vector<int> test_v = { 3,2,4,4 };
-            std::vector<int> test_wt = { 4,3,2,3 };
-            int test_W = 6;
-
-        //   int optimal_value = knapsack_rec(test_v.size(), test_v, test_wt, test_W);
-            PROFILE("Knapsack big");
-            int optimal_value = knapsack_rec(values.size(), values, weights, W);
+            PROFILE("Knapsack Recursive Memoization");
+            int optimal_value = knapsack_rec_memoization(values.size(), values, weights, W);
             PROFILE_STOP();
+
+            assert(optimal_value == 4243395);
+
+            PROFILE("Knapsack Original Smaller Array");
+            optimal_value = knapsack_smallArray(values, weights, W);
+            PROFILE_STOP();
+
+            assert(optimal_value == 4243395);
 
             std::cout << "Optimal value for big knapsack problem is: " << optimal_value << std::endl;
         }
