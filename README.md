@@ -27,3 +27,5 @@ Let's do some coding now...
 
 4) Dynamic Programming 2
    - Floyd-Warshall All-Pairs Shortest Path Algorithm
+
+5) Traveling Salesman Problem
