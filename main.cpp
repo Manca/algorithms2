@@ -12,9 +12,11 @@
 #include "assignment2.hpp"
 #include "assignment3.hpp"
 #include "assignment4.hpp"
+#include "assignment5.hpp"
 
 int main(int argc, const char * argv[]) 
 {
+    /*
     ///////////////////// Assignment 1 //////////////////////////
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
@@ -57,5 +59,9 @@ int main(int argc, const char * argv[])
     std::cout << std::endl << "*** Assignment 4 - All-Pairs Shortest Path ***" << std::endl;
     assignment4::run_algorithm("data/g1.txt");
     assignment4::run_algorithm("data/g2.txt");
-    assignment4::run_algorithm("data/g3.txt");
+    assignment4::run_algorithm("data/g3.txt"); */
+    PROFILE("TSP Man!")
+    assignment5::TSP tsp("data/tsp.txt");
+    tsp.solve();
+    PROFILE_STOP();
 }
