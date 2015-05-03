@@ -39,6 +39,7 @@ of the optimal solution? Can you use that structure to speed up your algorithm?
 #include <string>
 #include <fstream>
 #include <vector>
+#include <assert.h>
 
 namespace assignment5
 {
@@ -138,8 +139,6 @@ namespace assignment5
                                 if (dists[i] < min)
                                     min = dists[i];
                            // std::cout << "Minimum for subset: " << S << " is: " << min << std::endl << "-----" << std::endl;
-                            assert(S <= 31);
-                            assert(j + 1 <= 5);
                             A[S][j+1] = min;
 
                         }
