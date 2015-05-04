@@ -40,6 +40,7 @@ of the optimal solution? Can you use that structure to speed up your algorithm?
 #include <fstream>
 #include <vector>
 #include <assert.h>
+#include "lib/profile.hpp"
 
 namespace assignment5
 {
@@ -77,27 +78,32 @@ namespace assignment5
                 }
         }
         // returns the cost of the min cost tour for the given graph
-        double solve()
-        {         
+        float solve()
+        {
+            if (num_cities == 0)
+                return 0.0;
             ////// array definition
+            PROFILE("Allocation");
             int S_size = (int)std::pow(2, num_cities-1); // 2^24 (first city is always included)
             float **A = new float*[S_size];
             for (int i = 0; i < S_size; i++)
             {
-                A[i] = new float[num_cities-1];         // 2^24 x 24
+                A[i] = new float[num_cities];         // 2^24 x 24
             }
-
+            PROFILE_STOP();
+            PROFILE("Initialization");
             // initialization
             for (int i = 0; i < S_size; i++)
             {
-                for (int j = 0; j < num_cities-1;j++)
+                for (int j = 0; j < num_cities;j++)
                     A[i][j] = (float)INT32_MAX;
             }
             A[0][0] = 0;    // first subset of S (subset 1), contains only starting vertex 0 (0...001)
-            
+            PROFILE_STOP();
             // algo
             for (int m = 1; m < num_cities; m++)    // we need to start from 1 to get all the cities that are connected to city 0 directly!
             {
+                PROFILE("Processing m = " + std::to_string(m));
                 int64_t S = (1 << m) - 1;    // we begin with initial number of ones (m=2) (2^m - 1 - init size of the set)
                 int64_t S_no_j = 0;         // previous S that does not contain j
 
@@ -140,12 +146,12 @@ namespace assignment5
                                     min = dists[i];
                            // std::cout << "Minimum for subset: " << S << " is: " << min << std::endl << "-----" << std::endl;
                             A[S][j+1] = min;
-
                         }
                     }
                     // use Gosper Hack to get the next subset
                     S = next_subset(S);
                 }
+                PROFILE_STOP();
             }
 
             // finally, let's get the minimum of all minimums
@@ -159,11 +165,13 @@ namespace assignment5
             std::cout << "Minimum cost tour is: " << min_min << std::endl;
 
             // cleanup
+            PROFILE("Cleanup")
             for (int i = 0; i < S_size; i++)
             {
                 delete[] A[i];
             }
             delete[] A;
+            PROFILE_STOP();
 
             return min_min;
         }

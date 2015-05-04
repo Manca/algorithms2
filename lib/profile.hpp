@@ -13,6 +13,7 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <stack>
 
 namespace tools
 {
@@ -30,15 +31,18 @@ namespace tools
 
         void start(const std::string& name)
         {
-            _profileName = name;
+            _profileNames.push(name);   
             _start = std::chrono::steady_clock::now();
+            _startTimes.push(_start);
         }
         void stop()
         {
             _end = std::chrono::steady_clock::now();
-            _duration = std::chrono::duration_cast<std::chrono::milliseconds>(_end - _start).count();
+            _duration = std::chrono::duration_cast<std::chrono::milliseconds>(_end - _startTimes.top()).count();
+            _startTimes.pop();
 
-            std::cout << "[PROFILE] " << _profileName << " took " << _duration << "ms" << " to run." << std::endl;
+            std::cout << "[PROFILE] " << _profileNames.top() << " took " << _duration << "ms" << " to run." << std::endl;
+            _profileNames.pop();
         }
 
         long long elapsed()
@@ -50,7 +54,9 @@ namespace tools
         static Profile* _instance;
         t_Point         _start, _end;
         long long       _duration;
-        std::string     _profileName;
+        
+        std::stack<std::string> _profileNames;
+        std::stack<t_Point>     _startTimes;
 
         Profile()
         {            
