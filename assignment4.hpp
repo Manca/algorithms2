@@ -131,6 +131,7 @@ namespace assignment4
                 if (A[1][i][i] < 0)
                 {
                     std::cout << "Negative cycle!! Vertex: " << i << ". Total weight: " << A[1][i][i] << std::endl;
+                    PROFILE_STOP();
                     return false;
                 }
             }

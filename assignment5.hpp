@@ -104,8 +104,8 @@ namespace assignment5
             for (int m = 1; m < num_cities; m++)    // we need to start from 1 to get all the cities that are connected to city 0 directly!
             {
                 PROFILE("Processing m = " + std::to_string(m));
-                int64_t S = (1 << m) - 1;    // we begin with initial number of ones (m=2) (2^m - 1 - init size of the set)
-                int64_t S_no_j = 0;         // previous S that does not contain j
+                int S = (1 << m) - 1;    // we begin with initial number of ones (m=2) (2^m - 1 - init size of the set)
+                int S_no_j = 0;         // previous S that does not contain j
 
                 while (S < (1 << (num_cities-1)))   // and generate all subsets with m ones in them until we hit 2^(num_cities-1)
                 {
@@ -162,8 +162,8 @@ namespace assignment5
                 if (calc < min_min)
                     min_min = calc;
             }
-            std::cout << "Minimum cost tour is: " << min_min << std::endl;
-
+            std::cout << "Minimum cost tour is: " << (int)min_min << std::endl;
+            assert((int)min_min == 26442);
             // cleanup
             PROFILE("Cleanup")
             for (int i = 0; i < S_size; i++)
@@ -177,10 +177,10 @@ namespace assignment5
         }
 
         // Gosper Hack
-        int64_t next_subset(int64_t x)
+        int next_subset(int x)
         {
-            int64_t y = x & -x;
-            int64_t c = x + y;
+            int y = x & -x;
+            int c = x + y;
             x = (((x ^ c) >> 2) / y) | c;
             return x;
         }

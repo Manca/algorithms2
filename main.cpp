@@ -16,7 +16,7 @@
 
 int main(int argc, const char * argv[]) 
 {
-    /*
+    PROFILE("All problems for Algorithms 2 course")
     ///////////////////// Assignment 1 //////////////////////////
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
@@ -59,9 +59,15 @@ int main(int argc, const char * argv[])
     std::cout << std::endl << "*** Assignment 4 - All-Pairs Shortest Path ***" << std::endl;
     assignment4::run_algorithm("data/g1.txt");
     assignment4::run_algorithm("data/g2.txt");
-    assignment4::run_algorithm("data/g3.txt"); */
-    PROFILE("TSP Man!")
+    assignment4::run_algorithm("data/g3.txt"); 
+
+    ///////////////////// Assignment 5 //////////////////////////
+    std::cout << std::endl << "*** Assignment 5 - Traveling Salesman Problem ***" << std::endl;
+    PROFILE("TSP")
     assignment5::TSP tsp("data/tsp.txt");
     tsp.solve();
     PROFILE_STOP();
+
+    std::cout << std::endl;
+    PROFILE_STOP(); // main
 }

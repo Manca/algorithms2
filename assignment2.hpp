@@ -229,7 +229,7 @@ namespace assignment2
                 // from total number of nodes (all clusters)
                 // subtract leaders (clusters with nodes that are at most 2 Hamming distances away from each other)
                 // and duplicated nodes to get number of clusters that are at least 3 Hamming distances away from others
-                int totalNumberClusters = n - (MAX_NODES - uf.count()) - (n - mapa.size());
+                size_t totalNumberClusters = n - (MAX_NODES - uf.count()) - (n - mapa.size());
                 std::cout << "Edges 1 Hamming distance away: " << num_edg_cost_one << std::endl;
                 std::cout << "Edges 2 Hamming distances away: " << num_edg_cost_two << std::endl;
                 std::cout << "Number of clusters: " << totalNumberClusters << std::endl;

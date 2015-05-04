@@ -80,7 +80,7 @@ namespace assignment3
         int knapsack(const std::vector<int>& values, const std::vector<int>& weights, int W)
         {
             assert(values.size() == weights.size());    // values have to have coresponding weights
-            int n = values.size();
+            size_t n = values.size();
 
             // define and initialize resulting matrix (rows are integral weights up to W (inclusive), so 0,1,2,3...,W, columns are items up to n (inclusive))
             std::vector<std::vector<int>> A(W+1, std::vector<int>(n+1));
@@ -241,7 +241,7 @@ namespace assignment3
             read_file(fileName, values, weights, W);
 
             PROFILE("Knapsack Recursive Memoization");
-            int optimal_value = knapsack_rec_memoization(values.size(), values, weights, W);
+            int optimal_value = knapsack_rec_memoization((int)values.size(), values, weights, W);
             PROFILE_STOP();
             long long elapsedRM = tools::Profile::getInstance()->elapsed();
 
