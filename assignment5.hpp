@@ -39,7 +39,6 @@ of the optimal solution? Can you use that structure to speed up your algorithm?
 #include <string>
 #include <fstream>
 #include <vector>
-#include <assert.h>
 
 namespace assignment5
 {
