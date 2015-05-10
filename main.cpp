@@ -13,10 +13,12 @@
 #include "assignment3.hpp"
 #include "assignment4.hpp"
 #include "assignment5.hpp"
+#include "assignment6.hpp"
 
 int main(int argc, const char * argv[]) 
 {
     PROFILE("All problems for Algorithms 2 course")
+    /*
     ///////////////////// Assignment 1 //////////////////////////
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
@@ -67,6 +69,12 @@ int main(int argc, const char * argv[])
     assignment5::TSP tsp("data/tsp.txt");
     tsp.solve();
     PROFILE_STOP();
+    */
+    ///////////////////// Assignment 6 //////////////////////////
+    std::cout << std::endl << "*** Assignment 6 - 2-SAT Problem ***" << std::endl;
+
+
+
 
     std::cout << std::endl;
     PROFILE_STOP(); // main
