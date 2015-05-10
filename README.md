@@ -29,3 +29,5 @@ Let's do some coding now...
    - Floyd-Warshall All-Pairs Shortest Path Algorithm
 
 5) Traveling Salesman Problem
+
+6) 2-SAT Problem
