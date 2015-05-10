@@ -18,7 +18,7 @@
 int main(int argc, const char * argv[]) 
 {
     PROFILE("All problems for Algorithms 2 course")
-    /*
+
     ///////////////////// Assignment 1 //////////////////////////
 	std::cout << "*** Assignment 1 - Scheduling problem ***" << std::endl;
 	assignment1::scheduling_problem::run_algorithm("data/jobs.txt");
@@ -69,13 +69,22 @@ int main(int argc, const char * argv[])
     assignment5::TSP tsp("data/tsp.txt");
     tsp.solve();
     PROFILE_STOP();
-    */
+    
     ///////////////////// Assignment 6 //////////////////////////
     std::cout << std::endl << "*** Assignment 6 - 2-SAT Problem ***" << std::endl;
-
-
-
-
+    std::vector<bool> res;
+    PROFILE("2 SAT");
+    res.push_back(assignment6::run_algorithm("data/2sat1.txt"));
+    res.push_back(assignment6::run_algorithm("data/2sat2.txt"));
+    res.push_back(assignment6::run_algorithm("data/2sat3.txt"));
+    res.push_back(assignment6::run_algorithm("data/2sat4.txt"));
+    res.push_back(assignment6::run_algorithm("data/2sat5.txt"));
+    res.push_back(assignment6::run_algorithm("data/2sat6.txt"));
+    PROFILE_STOP();
+    std::cout << "Solution:";
+    for (bool sln : res)
+        std::cout << " " << sln;
+    
     std::cout << std::endl;
     PROFILE_STOP(); // main
 }
